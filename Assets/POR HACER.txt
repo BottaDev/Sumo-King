@@ -1,0 +1,104 @@
+
+==============================================
+
+				  POR HACER
+
+==============================================
+
+# Personajes:
+
+# Niveles:
+	
+# Modo Offline:
+	
+# Mapas:
+	- Nivel 3
+
+# Sonidos:
+	- Implementacion de sonidos al atacar
+
+# Consumibles:
+
+# Interfaz:
+	
+==============================================
+
+				  TERMINADO
+
+==============================================
+
+# Personajes:
+	- Bloqueo de movimiento al caer
+	- Aumento de tamaño al agarrar consumibles
+	- Destruccion de player al caer de la plataforma
+	- Animacion de correr
+	- Animacion idle
+	- Animacion al girar
+	- Modelos de personajes
+	- Buff de velocidad al agarrar consumible
+	- Sistema de empuje al cuerpo
+	- Sistema de empuje en las manos 
+	- Realentizacion al empujar
+	- Animacion de manos al empujar
+	- Animacion al caer
+
+# Niveles:
+	- Chequeo de empate
+	- Funcionalidad de empate
+	- Spawneo aleatorio de players en los mapas
+	- Seleccion de rondas totales
+	- Spawneo de players
+	- Conteo de tiempo
+	- Spawneo de consumibles dentro del mapa
+	- Aumentar spawn rate al faltar 45 segundos
+	- Habilitar movimiento de players cuando empieza la ronda
+	- Chequeo de ganador al quedar solo en la plataforma
+	- Acercamiento de camara con el jugador ganador
+
+# Modo Offline:
+	- Muestra de ganador en lobby propio
+	- Conteo de rondas ganadas
+	- Cheque de empate y partida de desempate
+	- Seleccion aleatoria de mapas
+	- Calculo de rondas por cantidad de jugadores
+
+# Mapas:
+	-Diseñar mapa 1 (Sumo arena)
+	-Diseñar mapa 2 (Bosque)
+
+# Consumibles:
+	- Rotacion de objeto al estar en el suelo
+	- Modelos de comida  (Onigiri)
+
+# Sonidos:
+	- Implementacion de sonidos en menu
+	- Implementacion de musica
+
+# Interfaz:
+	- Crear menu de inicio
+	- Ajustar texto dependiendo resolucion
+	- Cantidad de victorias de players
+	- Menu de pausa
+	- Implementar contador de consumibles tomados
+	- Orientacion de contador dependiendo posicion de camara
+	- Agregar temporizador de tiempo (2 minutos)
+	- Temporizador de inicio
+	
+==============================================
+
+				  SINOPSIS
+
+==============================================
+
+ Al iniciar la partida los jugadores esperaran 5 segundos y podran 
+ moverse. Caeran del cielo consumibles cada 1 - 2 segundos; al ser
+ consumidos, los jugadores ganaran poder de empuje y velocidad de 
+ movimiento por tiempo limitado. 
+  Los jugadores deberan empujarse entre ellos hasta que solo quede 1
+ en la plataforma, o hasta que se acabe el tiempo y se elija por 
+ mayor cantidad consumida de objetos al ganador. Si el tiempo se 
+ acaba y los jugadores tienen la misma cantidad de consumibles, sera
+ empate y se agregaran 15 segundos al tiempo.
+
+ Los modos de juego seran offline en la misma computadora, u online
+ por red.
