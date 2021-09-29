@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class PlayerSpawner : MonoBehaviour{
 
@@ -11,101 +12,70 @@ public class PlayerSpawner : MonoBehaviour{
     [HideInInspector]
     public bool[] isDrawPlayers = { false, false, false, false };
 
-    GameObject[] spawns;
-    bool[] spawnUsed;
+    private GameObject[] _spawns;
+    private bool[] _spawnUsed;
 
-    void Awake(){
-
-        if (instance == null){
+    void Awake()
+    {
+        if (instance == null)
             instance = this;
-        }else if (instance != this){
+        else if (instance != this)
             Destroy(gameObject);
-        }
-
+        
         DontDestroyOnLoad(gameObject);
     }
 
-    public void GetSpawns(bool isDraw){
+    public void GetSpawns(bool isDraw)
+    {
+        _spawns = GameObject.FindGameObjectsWithTag("Spawn Area");
 
-        spawns = GameObject.FindGameObjectsWithTag("Spawn Area");
+        _spawnUsed = new bool[] { false, false, false, false };
 
-        spawnUsed = new bool[] { false, false, false, false };
-
-        if (!isDraw){
-            SpawnPlayers(playersActive);
-        } else{
-            SpawnPlayers(isDrawPlayers);
-            //SpawnDrawPlayers();
-        }
+        SpawnPlayers(!isDraw ? playersActive : isDrawPlayers);
     }
 
-    void SpawnPlayers(bool[] array){
-
-        for (int i = 0; i < array.Length; i++){
-
-            if (array[i]){
-                
+    private void SpawnPlayers(bool[] array)
+    {
+        for (int i = 0; i < array.Length; i++)
+        {
+            if (array[i])
+            {
                 bool breaker = false;
 
-                while (!breaker){
-
+                while (!breaker)
+                {
                     int random = Random.Range(0, 4);
 
-                    if (!spawnUsed[random]){
-
-                        spawnUsed[random] = true;
+                    if (!_spawnUsed[random])
+                    {
+                        _spawnUsed[random] = true;
 
                         breaker = true;
 
-                        Instantiate(playerPrefab[i], spawns[random].transform.position, spawns[random].transform.rotation);
+                        PhotonNetwork.Instantiate(playerPrefab[i].name, _spawns[random].transform.position, _spawns[random].transform.rotation);
                     }
                 }
             }
         }
     }
-    /*
-    void SpawnDrawPlayers(){                // Funcion que se ejecuta cuando hay empate 
 
-        for (int i = 0; i < isDrawPlayers.Length; i++){
-
-            if (isDrawPlayers[i]){
-
-                bool breaker = false;
-
-                while (!breaker){
-
-                    int random = Random.Range(0, 4);
-
-                    if (!spawnUsed[random]){
-
-                        spawnUsed[random] = true;
-
-                        breaker = true;
-
-                        Instantiate(playerPrefab[i], spawns[random].transform.position, spawns[random].transform.rotation);
-                    }
-                }
-            }
-        }
-    }*/
-
-    public void AddPlayer(int player){
-
+    public void AddPlayer(int player)
+    {
         playersActive[player - 1] = true;
     }
 
-    public void DisableAllPlayers(){
-
-        for (int i = 0; i < playersActive.Length; i++){
-
+    public void DisableAllPlayers()
+    {
+        for (int i = 0; i < playersActive.Length; i++)
+        {
             playersActive[i] = false;
         }
     }
 
-    public void DisableIsDrawPlayers(){
-
-        for (int i = 0; i < isDrawPlayers.Length; i++){
-
+    public void DisableIsDrawPlayers()
+    {
+        for (int i = 0; i < isDrawPlayers.Length; i++)
+        {
             isDrawPlayers[i] = false;
         }
     }
