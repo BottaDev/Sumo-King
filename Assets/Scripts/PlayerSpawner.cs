@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class PlayerSpawner : MonoBehaviour{
+public class PlayerSpawner : MonoBehaviourPun{
 
     public static PlayerSpawner instance;
 
@@ -15,7 +15,7 @@ public class PlayerSpawner : MonoBehaviour{
     private GameObject[] _spawns;
     private bool[] _spawnUsed;
 
-    void Awake()
+    private void Awake()
     {
         if (instance == null)
             instance = this;

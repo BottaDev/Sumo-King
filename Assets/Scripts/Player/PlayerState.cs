@@ -30,7 +30,6 @@ public class PlayerState : MonoBehaviourPun
             StopSpeed();
     }
     
-    // Se ejecuta al tomar un consumible
     private void IncrenseSpeed()
     {
         _buffTimer -= Time.deltaTime;
@@ -45,8 +44,7 @@ public class PlayerState : MonoBehaviourPun
             speedBuff = 1f;
         }
     }
-
-    // Se ejecuta al empujar a un jugador
+    
     private void StopSpeed()
     {
         _debuffTimer -= Time.deltaTime;

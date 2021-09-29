@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,11 +7,8 @@ using Photon.Realtime;
 
 public class ServerConnection : MonoBehaviourPunCallbacks
 {
-    string joinName;
-    string createName;
-
-    [SerializeField] GameObject principalUI;
-    [SerializeField] GameObject joinRoomUI;
+    private string _joinName = String.Empty;
+    private string _createName = String.Empty;
 
     public void ConnectToServer()
     {
@@ -31,33 +29,50 @@ public class ServerConnection : MonoBehaviourPunCallbacks
     {
         Debug.Log("Player connected to master");
 
-        principalUI.SetActive(false);
-        joinRoomUI.SetActive(true);
+        PhotonNetwork.AutomaticallySyncScene = true;
     }
 
     public void JoinRoom()
     {
-        PhotonNetwork.JoinRoom(joinName);
+        if (_joinName == string.Empty || _joinName == "" || 
+            _createName == string.Empty || _createName == "" )
+            return;
+        
+        PhotonNetwork.JoinRoom(_joinName);
+    }
+    
+    public void LeaveLobby()
+    {
+        PhotonNetwork.LeaveLobby();
+    }
+
+    public void CreateLobby()
+    {
+        PhotonNetwork.crea
     }
     
     public void CreateRoom()
     {
+        if (_joinName == string.Empty || _joinName == "" || 
+            _createName == string.Empty || _createName == "")
+            return;
+        
         RoomOptions options = new RoomOptions();
         options.MaxPlayers = 4;
         options.IsOpen = true;
         options.IsVisible = true;
 
-        PhotonNetwork.CreateRoom(createName, options, TypedLobby.Default);
+        PhotonNetwork.CreateRoom(_createName, options, TypedLobby.Default);
     }
 
     public void InsertNewRoomName(string serverName)
     {
-        createName = serverName;
+        _createName = serverName;
     }
 
     public void InsertJoinRoomName(string serverName)
     {
-        joinName = serverName;
+        _joinName = serverName;
     }
 
     public void ChangeNickName(string nickName)
@@ -74,17 +89,7 @@ public class ServerConnection : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         Debug.Log("Player joined room");
-        PhotonNetwork.LoadLevel(1);
-    }
-
-    public override void OnJoinRoomFailed(short returnCode, string message)
-    {
-
-    }
-
-    public override void OnCreateRoomFailed(short returnCode, string message)
-    {
-
+        //PhotonNetwork.LoadLevel(1);
     }
 
     public override void OnLeftLobby()
@@ -94,8 +99,6 @@ public class ServerConnection : MonoBehaviourPunCallbacks
 
     public override void OnDisconnected(DisconnectCause cause)
     {
-        principalUI.SetActive(true);
-        joinRoomUI.SetActive(false);
         Debug.Log("Player disconnected");
     }
 }
