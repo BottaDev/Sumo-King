@@ -12,8 +12,8 @@ public class PlayerSpawner : MonoBehaviourPun{
     [HideInInspector]
     public bool[] isDrawPlayers = { false, false, false, false };
 
-    private GameObject[] _spawns;
-    private bool[] _spawnUsed;
+    [SerializeField] private GameObject[] _spawns;
+    [SerializeField] private bool[] _spawnUsed;
 
     private void Awake()
     {

@@ -46,11 +46,6 @@ public class ServerConnection : MonoBehaviourPunCallbacks
         PhotonNetwork.LeaveLobby();
     }
 
-    public void CreateLobby()
-    {
-        PhotonNetwork.crea
-    }
-    
     public void CreateRoom()
     {
         if (_joinName == string.Empty || _joinName == "" || 
