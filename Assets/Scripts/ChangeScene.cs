@@ -1,21 +1,20 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class ChangeScene : MonoBehaviour{
-
-    public string scene = "Tutorial";
-
-    public void FindMatchManager(){
-
-        MatchManager manager = GameObject.Find("MatchManager").GetComponent<MatchManager>();
-
-        manager.StartGame();
+public class ChangeScene : MonoBehaviour
+{
+    private MatchManager _manager;
+    
+    private void Start()
+    {
+        _manager = FindObjectOfType<MatchManager>();
     }
 
-    public void SceneChange(){
-
-        SceneManager.LoadScene(scene);
+    public void StartGame()
+    {
+        _manager.StartGame();
     }
 }

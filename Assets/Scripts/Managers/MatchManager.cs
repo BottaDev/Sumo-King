@@ -1,110 +1,104 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MatchManager : MonoBehaviour{
-        
+public class MatchManager : MonoBehaviourPun
+{
     public int[] playerWins = {0,0,0,0};
-    [Range(min: 1f, max: 100f)]
-    public int totalRounds  = 1;
-
-    [HideInInspector]
-    public int playerWinner;
-    int playerWinnerRival;
-    int currentRound = 0;
-
-    string mapName;
-
-    bool isDraw = false;
-    bool sceneLimiter = false;
-    bool pointLimiter = false;
-
-    // Esta funcion sirve para detectar que escena fue cargada
-    void LoadScene(){
+    [Range(min: 1f, max: 100f)] public int totalRounds  = 1;
+    [HideInInspector] public int playerWinner;
+    
+    private int _playerWinnerRival;
+    private int _currentRound = 0;
+    private string _mapName;
+    private bool _isDraw;
+    private bool _sceneLimiter;
+    private bool _pointLimiter;
+    
+    private void LoadScene()
+    {
         SceneManager.sceneLoaded += OnSceneLoaded;
 
-        sceneLimiter = false;
-        pointLimiter = false;
+        _sceneLimiter = false;
+        _pointLimiter = false;
     }
 
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode){ 
-    
-        if (((scene.name == "SumoArena_Offline") || (scene.name == "Hills_Offline")) && !sceneLimiter){   // Se agrego un limitador, ya que por alguna razon desconocida la funcion se ejecutaba 2 veces
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Se agrego un limitador, ya que por alguna razon desconocida la funcion se ejecutaba 2 veces
+        if (((scene.name == "SumoArena_Offline") || (scene.name == "Hills_Offline")) && !_sceneLimiter){
 
-            sceneLimiter = true;
+            _sceneLimiter = true;
 
-            currentRound += 1;
+            _currentRound += 1;
 
-            if (!isDraw){
-                PlayerSpawner.instance.GetSpawns(false);
-            } else {
-                PlayerSpawner.instance.GetSpawns(true);
-            }
-
-        } else if (scene.name == "Menu"){
+            PlayerSpawner.instance.GetSpawns(_isDraw);
+        } 
+        else if (scene.name == "Menu")
+        {
             SetTotalRounds(1);
 
-            currentRound = 0;
+            _currentRound = 0;
 
             playerWins = new int[] { 0, 0, 0, 0 }; 
         } 
     }
 
-    public void SetTotalRounds(int value){      // Funcion seteada en el menu
-
+    public void SetTotalRounds(int value)
+    {
         totalRounds = value;
     }
 
-    void GetTotalPlayers(){
-
+    private int GetTotalPlayers()
+    {
         int totalPlayers = 0;
 
-        for (int i = 0; i < PlayerSpawner.instance.playersActive.Length; i++){
-
-            if (PlayerSpawner.instance.playersActive[i]){
+        for (int i = 0; i < PlayerSpawner.instance.playersActive.Length; i++)
+        {
+            if (PlayerSpawner.instance.playersActive[i])
                 totalPlayers++;
-            }
         }
+
+        return totalPlayers;
     }
 
-    void SelectMap(){
-
+    private void SelectMap()
+    {
         int random = Random.Range(1, 3);
 
-        switch (random){
-
+        switch (random)
+        {
             case 1:
-                mapName = "SumoArena_Offline";
+                _mapName = "SumoArena_Offline";
                 break;
 
             case 2:
-                mapName = "Hills_Offline";
+                _mapName = "Hills_Offline";
                 break;
         }
 
-        SceneManager.LoadScene(mapName);
-
+        //SceneManager.LoadScene(_mapName);
+        PhotonNetwork.LoadLevel(_mapName);
         LoadScene();
-
         MusicManager.instance.LoadScene();
     }
 
-    public void StartGame(){     //Se ejecuta cuando el boton "Play!" fue seleccionado en el menu
-
-        GetTotalPlayers();
-
-        SelectMap();
+    public void StartGame()
+    {
+        if (GetTotalPlayers() > 2)
+            SelectMap();
     }
 
-    public void AddPlayerWin(GameObject playerWinner){
-        
-        if (!pointLimiter){
+    public void AddPlayerWin(GameObject playerWinner)
+    {
+        if (!_pointLimiter)
+        {
+            _pointLimiter = true;
 
-            pointLimiter = true;
-
-            switch (playerWinner.GetComponent<PlayerInput>().playerNum){
-
+            switch (playerWinner.GetComponent<PlayerInput>().playerNum)
+            {
                 case PlayerInput.PlayerNum.Player1:
                     playerWins[0] += 1;
                     break;
@@ -123,63 +117,59 @@ public class MatchManager : MonoBehaviour{
         }
     }
 
-    void CheckGameRound(){
-        
-        if(currentRound < totalRounds){
+    private void CheckGameRound()
+    {
+        if(_currentRound < totalRounds)
             SelectMap();
-        } else{
+        else
             CheckWinner();
-        }
     }
 
-    void CheckWinner(){
-
+    private void CheckWinner()
+    {
         int maxPoints = 0;
         int rivalPoints = 0;
 
-        for (int i = 0; i < playerWins.Length; i++){
-
-            if (playerWins[i] > maxPoints){
-
+        for (int i = 0; i < playerWins.Length; i++)
+        {
+            if (playerWins[i] > maxPoints)
+            {
                 maxPoints = playerWins[i];
 
                 playerWinner = i;
 
                 PlayerSpawner.instance.DisableIsDrawPlayers();
 
-                isDraw = false;
-
-            } else if (playerWins[i] == maxPoints){
-
+                _isDraw = false;
+            } 
+            else if (playerWins[i] == maxPoints)
+            {
                 rivalPoints = playerWins[i];
 
-                playerWinnerRival = i;
+                _playerWinnerRival = i;
                 
-                PlayerSpawner.instance.isDrawPlayers[playerWinnerRival] = true;
+                PlayerSpawner.instance.isDrawPlayers[_playerWinnerRival] = true;
 
-                isDraw = true;
+                _isDraw = true;
             }     
         }
 
-        if (isDraw){
-
+        if (_isDraw)
+        {
             totalRounds += 1;
 
             PlayerSpawner.instance.isDrawPlayers[playerWinner] = true;
 
             SelectMap();
-        } else {
-            // MOSTRAR GANADOR
-            print("Juego terminado");
-
-            SceneManager.LoadScene("MatchLobby_Offline");
-
-
+        }
+        else 
+        {
+            SceneManager.LoadScene(0);
         }
     }
 
-    public void RestartDrawMatch(){     // Se ejecuta cuando los jugadores caen al mismo tiempo de la plataforma
-        
+    public void RestartDrawMatch()
+    {
         totalRounds += 1;
 
         SelectMap();

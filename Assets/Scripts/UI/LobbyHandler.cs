@@ -9,10 +9,12 @@ public class LobbyHandler : MonoBehaviourPun
 {
     public TextMeshProUGUI roomName;
     public List<TextMeshProUGUI> playerList;
+
+    private ServerConnection _connection;
     
     private void Update()
     {
-        var myList = PhotonNetwork.PlayerList;
+        var myList = _connection.GetPlayerList();
 
         for (int i = 0; i < playerList.Count; i++)
         {
@@ -21,15 +23,16 @@ public class LobbyHandler : MonoBehaviourPun
                 playerList[i].text = "";
                 continue;
             }
-            playerList[i].text = myList[i].NickName;
+            
+            playerList[i].text = i == 0 ? myList[i].NickName + " (Master)" : myList[i].NickName;
         }
     }
 
     private void OnEnable()
     {
-        if (PhotonNetwork.CurrentRoom.Name == null)
-            return;
+        if (_connection == null)
+            _connection = FindObjectOfType<ServerConnection>();
         
-        roomName.text = PhotonNetwork.CurrentRoom.Name + " Lobby";
+        roomName.text = _connection.GetRoomName() + " Lobby";
     }
 }

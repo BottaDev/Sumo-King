@@ -7,8 +7,7 @@ using Photon.Realtime;
 
 public class ServerConnection : MonoBehaviourPunCallbacks
 {
-    private string _joinName = String.Empty;
-    private string _createName = String.Empty;
+    private string _roomName = String.Empty;
 
     public void ConnectToServer()
     {
@@ -34,11 +33,10 @@ public class ServerConnection : MonoBehaviourPunCallbacks
 
     public void JoinRoom()
     {
-        if (_joinName == string.Empty || _joinName == "" || 
-            _createName == string.Empty || _createName == "" )
+        if (_roomName == string.Empty || _roomName == "")
             return;
         
-        PhotonNetwork.JoinRoom(_joinName);
+        PhotonNetwork.JoinRoom(_roomName);
     }
     
     public void LeaveLobby()
@@ -48,8 +46,7 @@ public class ServerConnection : MonoBehaviourPunCallbacks
 
     public void CreateRoom()
     {
-        if (_joinName == string.Empty || _joinName == "" || 
-            _createName == string.Empty || _createName == "")
+        if (_roomName == string.Empty || _roomName == "")
             return;
         
         RoomOptions options = new RoomOptions();
@@ -57,17 +54,12 @@ public class ServerConnection : MonoBehaviourPunCallbacks
         options.IsOpen = true;
         options.IsVisible = true;
 
-        PhotonNetwork.CreateRoom(_createName, options, TypedLobby.Default);
+        PhotonNetwork.CreateRoom(_roomName, options, TypedLobby.Default);
     }
 
-    public void InsertNewRoomName(string serverName)
+    public void ChangeRoomName(string serverName)
     {
-        _createName = serverName;
-    }
-
-    public void InsertJoinRoomName(string serverName)
-    {
-        _joinName = serverName;
+        _roomName = serverName;
     }
 
     public void ChangeNickName(string nickName)
@@ -95,5 +87,15 @@ public class ServerConnection : MonoBehaviourPunCallbacks
     public override void OnDisconnected(DisconnectCause cause)
     {
         Debug.Log("Player disconnected");
+    }
+
+    public string GetRoomName()
+    {
+        return _roomName;
+    }
+
+    public Player[] GetPlayerList()
+    {
+        return PhotonNetwork.PlayerList;
     }
 }
