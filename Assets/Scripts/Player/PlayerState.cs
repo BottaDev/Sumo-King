@@ -21,6 +21,8 @@ public class PlayerState : MonoBehaviourPun
     private float _debuffTimer = 0;
     private float _buffTimer = 0;
 
+    private Player _myPlayer;
+    
     private void Update() 
     {
         if (_buffed)
@@ -43,6 +45,12 @@ public class PlayerState : MonoBehaviourPun
             _buffed = false;
             speedBuff = 1f;
         }
+    }
+    
+    [PunRPC]
+    void SetOwn(Photon.Realtime.Player myPlayer)
+    {
+        _myPlayer = myPlayer;
     }
     
     private void StopSpeed()

@@ -4,10 +4,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine.SceneManagement;
 
 public class ServerConnection : MonoBehaviourPunCallbacks
 {
     private string _roomName = String.Empty;
+
+    private void Start()
+    {
+        if (SceneManager.GetActiveScene().buildIndex == 0)
+            DisconnectToServer();
+    }
 
     public void ConnectToServer()
     {
@@ -76,7 +83,6 @@ public class ServerConnection : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         Debug.Log("Player joined room");
-        //PhotonNetwork.LoadLevel(1);
     }
 
     public override void OnLeftLobby()
@@ -87,6 +93,7 @@ public class ServerConnection : MonoBehaviourPunCallbacks
     public override void OnDisconnected(DisconnectCause cause)
     {
         Debug.Log("Player disconnected");
+        PhotonNetwork.LeaveRoom();
     }
 
     public string GetRoomName()

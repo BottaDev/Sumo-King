@@ -18,14 +18,14 @@ public class LobbyManager_Offline : MonoBehaviour{
 
     MatchManager matchManager;
     bool[] spawnUsed = new bool[] { false, false, false };
-
+/*
     void Start(){
 
         matchManager = GameObject.Find("MatchManager").GetComponent<MatchManager>();
 
         SpawnPlayers();
     }
-
+*/
     void Update(){
 
         timeLeft -= Time.deltaTime;
@@ -42,9 +42,9 @@ public class LobbyManager_Offline : MonoBehaviour{
         }
 
     }
-
+/*
     void SpawnPlayers(){
-
+        
         spawnUsed = new bool[] { false, false, false };
 
         GameObject winner = Instantiate(playerPrefab[matchManager.playerWinner], winnerSpawn.position, winnerSpawn.rotation);
@@ -82,7 +82,7 @@ public class LobbyManager_Offline : MonoBehaviour{
             }
         }
     }
-
+*/
     void BackToMenu(){
         SceneManager.LoadScene("Menu");
     }

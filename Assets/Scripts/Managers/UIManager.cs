@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class UIManager : MonoBehaviour{
+public class UIManager : MonoBehaviourPun{
 
     public GameObject pauseMenu;
 
@@ -23,9 +24,14 @@ public class UIManager : MonoBehaviour{
     public TextMeshProUGUI timePlus;
     public TextMeshProUGUI isDraw;
 
-    void Start(){
+    private void Start(){
 
-        bool[] activePlayers = PlayerSpawner.instance.playersActive;
+        //bool[] activePlayers = PlayerSpawner.instance.playersActive;
+        bool[] activePlayers = {false, false, false, false};
+        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+        {
+            activePlayers[i] = true;
+        }
 
         for (int i = 0; i < activePlayers.Length; i++){
 
@@ -43,7 +49,7 @@ public class UIManager : MonoBehaviour{
             }
         }
 
-        MatchManager match = GameObject.Find("MatchManager").GetComponent<MatchManager>();
+        MatchManager match = FindObjectOfType<MatchManager>();
 
         player1Wins.text = match.playerWins[0].ToString();
         player2Wins.text = match.playerWins[1].ToString();
@@ -51,7 +57,8 @@ public class UIManager : MonoBehaviour{
         player4Wins.text = match.playerWins[3].ToString();
     }
 
-    public void ChangeTimer(float time){            // Muestra el tiempo que falta para que termine la ronda
+    // Muestra el tiempo que falta para que termine la ronda
+    public void ChangeTimer(float time){
 
         float minutes = Mathf.Floor(time / 60);
         float seconds = Mathf.RoundToInt(time % 60);
@@ -64,7 +71,8 @@ public class UIManager : MonoBehaviour{
         }
     }
 
-    public void ChangeSecInterval(int time){        // Muestra los 5 segundos al principio de cada ronda
+    // Muestra los 5 segundos al principio de cada ronda
+    public void ChangeSecInterval(int time){
 
         secInterval.text = time.ToString();
 
@@ -76,14 +84,15 @@ public class UIManager : MonoBehaviour{
         }
     }
 
-    IEnumerator SetInactive(float time, GameObject obj){
+    private IEnumerator SetInactive(float time, GameObject obj){
 
         yield return new WaitForSeconds(time);
 
         obj.SetActive(false);
     }
 
-    public IEnumerator AddTime(){       // Funcion que muestra el +15 al lado del tiempo
+    // Funcion que muestra el +15 al lado del tiempo
+    public IEnumerator AddTime(){
 
         timePlus.gameObject.SetActive(true);
 

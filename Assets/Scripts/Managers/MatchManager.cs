@@ -53,14 +53,12 @@ public class MatchManager : MonoBehaviourPun
 
     private int GetTotalPlayers()
     {
-        int totalPlayers = 0;
-
-        for (int i = 0; i < PlayerSpawner.instance.playersActive.Length; i++)
+        /*for (int i = 0; i < PlayerSpawner.instance.playersActive.Length; i++)
         {
             if (PlayerSpawner.instance.playersActive[i])
                 totalPlayers++;
-        }
-
+        }*/
+        var totalPlayers = PhotonNetwork.PlayerList.Length;
         return totalPlayers;
     }
 
@@ -87,7 +85,7 @@ public class MatchManager : MonoBehaviourPun
 
     public void StartGame()
     {
-        if (GetTotalPlayers() > 2)
+        if (GetTotalPlayers() >= 2)
             SelectMap();
     }
 

@@ -99,7 +99,7 @@ public class MenuInput_Offline : MonoBehaviour {
         horizontalAxisP4 = "Horizontal P4";
     }
 
-    void Update() {
+    /*void Update() {
 
         horizontalInputP1 = Input.GetAxis(horizontalAxisP1);
         verticalInputP1 = Input.GetAxis(verticalAxisP1);
@@ -156,7 +156,7 @@ public class MenuInput_Offline : MonoBehaviour {
 
         if (activePlayers >= 2)
             SetObject(playButton, true);
-    }
+    }*/
 
     void SetObject(GameObject obj, bool mode){
 
