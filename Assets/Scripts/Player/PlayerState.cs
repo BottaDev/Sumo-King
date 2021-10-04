@@ -12,19 +12,18 @@ public class PlayerState : MonoBehaviourPun
     [Range(min: 7, max: 14)]
     public float pushForce = 7;         
     public GameObject crown;
-
-    [HideInInspector]
-    public float speedBuff = 1;
+    [HideInInspector] public float speedBuff = 1;
     
-    private bool _deBuffed = false;
-    private bool _buffed = false;
-    private float _debuffTimer = 0;
-    private float _buffTimer = 0;
-
-    private Player _myPlayer;
+    [SerializeField, HideInInspector] private bool _deBuffed = false;
+    [SerializeField, HideInInspector] private bool _buffed = false;
+    [SerializeField, HideInInspector] private float _debuffTimer = 0;
+    [SerializeField, HideInInspector] private float _buffTimer = 0;
     
     private void Update() 
     {
+        if (!photonView.IsMine) 
+            return;
+        
         if (_buffed)
             IncrenseSpeed();
 
@@ -46,13 +45,7 @@ public class PlayerState : MonoBehaviourPun
             speedBuff = 1f;
         }
     }
-    
-    [PunRPC]
-    void SetOwn(Photon.Realtime.Player myPlayer)
-    {
-        _myPlayer = myPlayer;
-    }
-    
+
     private void StopSpeed()
     {
         _debuffTimer -= Time.deltaTime;

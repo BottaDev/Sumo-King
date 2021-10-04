@@ -15,15 +15,15 @@ public class RandomSpawner : MonoBehaviour{
 
     bool spawnRateLimiter = false;
 
-    IEnumerator StartDelay(float timer){
-
+    private IEnumerator StartDelay(float timer)
+    {
         yield return new WaitForSeconds(timer);
 
-        StartCoroutine("SpawnConsumables");
+        StartCoroutine(nameof(SpawnConsumables));
     }
 
-    IEnumerator SpawnConsumables(){
-
+    private IEnumerator SpawnConsumables()
+    {
         while (!matchIsOver){
 
             yield return new WaitForSeconds(spawnRate);
@@ -31,23 +31,22 @@ public class RandomSpawner : MonoBehaviour{
             Vector3 position = new Vector3(Random.Range(-boundaryX, boundaryX), dropHeight, Random.Range(-boundaryZ, boundaryZ));
             Quaternion rotation = new Quaternion(0, Random.Range(0f, 360f), 0, 0);
 
-            GameObject inst = Instantiate(consumable, position, rotation);
-            print("Spawneo consumible");
+            Instantiate(consumable, position, rotation);
         } 
     } 
 
-    public void ChangeSpawnRate(){
-        
-        if (!spawnRateLimiter){
-
+    public void ChangeSpawnRate()
+    {
+        if (!spawnRateLimiter)
+        {
             spawnRateLimiter = true;
 
             spawnRate /= 2;
         }
     }
 
-    public void EndMatch(){
-
+    public void EndMatch()
+    {
         matchIsOver = true;
     }
 }

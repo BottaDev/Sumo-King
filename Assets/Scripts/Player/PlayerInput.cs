@@ -9,14 +9,14 @@ public class PlayerInput : MonoBehaviourPun
 {
     public PlayerNum playerNum;
     
-    private PlayerState _state;
-    private AnimationController _animationController;
-    private Rigidbody _rb;
-    private string _turnAxis;
-    private string _movementAxis;
-    private float _movementInput;              
-    private float _turnInput;
-
+    [SerializeField, HideInInspector]private PlayerState _state;
+    [SerializeField, HideInInspector]private AnimationController _animationController;
+    [SerializeField, HideInInspector]private Rigidbody _rb;
+    [SerializeField, HideInInspector]private string _movementAxis = "Vertical";
+    [SerializeField, HideInInspector]private string _turnAxis = "Horizontal";
+    [SerializeField, HideInInspector]private float _movementInput;              
+    [SerializeField, HideInInspector]private float _turnInput;
+    
     private void Awake()
     {
         _state = GetComponent<PlayerState>();
@@ -25,8 +25,11 @@ public class PlayerInput : MonoBehaviourPun
 
     private void Start()
     {
-        SetControls();
+        //SetControls();
         _rb = GetComponent<Rigidbody>();
+
+        if (!photonView.IsMine)
+            this.enabled = false;
     }
 
     private void Update()
@@ -65,13 +68,12 @@ public class PlayerInput : MonoBehaviourPun
     private void Turn()
     {
         float turn = _turnInput * _state.turnSpeed * Time.deltaTime;
-
         Quaternion inputRotation = Quaternion.Euler(0f, turn, 0f);
 
         _rb.MoveRotation(_rb.rotation * inputRotation);
     }
     
-    private void SetControls()
+    /*private void SetControls()
     {
         switch (playerNum)
         {
@@ -95,7 +97,7 @@ public class PlayerInput : MonoBehaviourPun
                 _turnAxis = "Horizontal P4";
                 break;
         }
-    }
+    }*/
     
     public enum PlayerNum
     {

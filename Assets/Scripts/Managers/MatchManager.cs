@@ -10,12 +10,12 @@ public class MatchManager : MonoBehaviourPun
     [Range(min: 1f, max: 100f)] public int totalRounds  = 1;
     [HideInInspector] public int playerWinner;
     
-    private int _playerWinnerRival;
-    private int _currentRound = 0;
-    private string _mapName;
-    private bool _isDraw;
-    private bool _sceneLimiter;
-    private bool _pointLimiter;
+    [SerializeField] private int _playerWinnerRival;
+    [SerializeField] private int _currentRound = 0;
+    [SerializeField] private string _mapName;
+    [SerializeField] private bool _isDraw;
+    [SerializeField] private bool _sceneLimiter;
+    [SerializeField] private bool _pointLimiter;
     
     private void LoadScene()
     {
@@ -126,26 +126,20 @@ public class MatchManager : MonoBehaviourPun
     private void CheckWinner()
     {
         int maxPoints = 0;
-        int rivalPoints = 0;
 
         for (int i = 0; i < playerWins.Length; i++)
         {
             if (playerWins[i] > maxPoints)
             {
                 maxPoints = playerWins[i];
-
                 playerWinner = i;
-
                 PlayerSpawner.instance.DisableIsDrawPlayers();
 
                 _isDraw = false;
             } 
             else if (playerWins[i] == maxPoints)
             {
-                rivalPoints = playerWins[i];
-
                 _playerWinnerRival = i;
-                
                 PlayerSpawner.instance.isDrawPlayers[_playerWinnerRival] = true;
 
                 _isDraw = true;
@@ -155,7 +149,6 @@ public class MatchManager : MonoBehaviourPun
         if (_isDraw)
         {
             totalRounds += 1;
-
             PlayerSpawner.instance.isDrawPlayers[playerWinner] = true;
 
             SelectMap();
