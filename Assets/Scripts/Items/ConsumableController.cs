@@ -1,35 +1,31 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
-public class ConsumableController : MonoBehaviour{
-    
+public class ConsumableController : MonoBehaviourPun
+{
     public float rotationSpeed;
     public float groundLevelY;          // Nivel en el que se posada el objeto
     public Rigidbody rb;
-    // 0.08  0.02   0.02
-    void Update(){
-
+    
+    private void Update()
+    {
         transform.Rotate(new Vector3(0, rotationSpeed * Time.deltaTime, 0));
     }
 
-    void OnTriggerEnter(Collider other){
-
-        if (other.gameObject.tag == "Ground"){
-
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Ground"))
+        {
             rb.isKinematic = true;
-
             transform.position = new Vector3(transform.position.x, groundLevelY, transform.position.z);
         }
 
-        if (other.gameObject.tag == "Player"){
-
+        if (other.gameObject.CompareTag("Player"))
             Destroy(gameObject, 0.2f);
-        }
 
-        if (other.gameObject.tag == "DestroyObject"){
-
+        if (other.gameObject.CompareTag("DestroyObject"))
             Destroy(gameObject);
-        }
     }
 }

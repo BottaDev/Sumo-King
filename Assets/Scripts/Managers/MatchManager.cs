@@ -10,12 +10,12 @@ public class MatchManager : MonoBehaviourPun
     [Range(min: 1f, max: 100f)] public int totalRounds  = 1;
     [HideInInspector] public int playerWinner;
     
-    [SerializeField] private int _playerWinnerRival;
-    [SerializeField] private int _currentRound = 0;
-    [SerializeField] private string _mapName;
-    [SerializeField] private bool _isDraw;
-    [SerializeField] private bool _sceneLimiter;
-    [SerializeField] private bool _pointLimiter;
+    [SerializeField, HideInInspector] private int _playerWinnerRival;
+    [SerializeField, HideInInspector] private int _currentRound = 0;
+    [SerializeField, HideInInspector] private string _mapName;
+    [SerializeField, HideInInspector] private bool _isDraw;
+    [SerializeField, HideInInspector] private bool _sceneLimiter;
+    [SerializeField, HideInInspector] private bool _pointLimiter;
     
     private void LoadScene()
     {

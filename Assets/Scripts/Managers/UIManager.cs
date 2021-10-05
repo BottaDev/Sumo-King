@@ -5,8 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class UIManager : MonoBehaviourPun{
-
+public class UIManager : MonoBehaviourPun
+{
     public GameObject pauseMenu;
 
     public GameObject player1Area;
@@ -24,8 +24,8 @@ public class UIManager : MonoBehaviourPun{
     public TextMeshProUGUI timePlus;
     public TextMeshProUGUI isDraw;
 
-    private void Start(){
-
+    private void Start()
+    {
         //bool[] activePlayers = PlayerSpawner.instance.playersActive;
         bool[] activePlayers = {false, false, false, false};
         for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
@@ -58,8 +58,8 @@ public class UIManager : MonoBehaviourPun{
     }
 
     // Muestra el tiempo que falta para que termine la ronda
-    public void ChangeTimer(float time){
-
+    public void ChangeTimer(float time)
+    {
         float minutes = Mathf.Floor(time / 60);
         float seconds = Mathf.RoundToInt(time % 60);
 
@@ -72,28 +72,27 @@ public class UIManager : MonoBehaviourPun{
     }
 
     // Muestra los 5 segundos al principio de cada ronda
-    public void ChangeSecInterval(int time){
-
+    public void ChangeSecInterval(int time)
+    {
         secInterval.text = time.ToString();
 
-        if(time <= 0){
-
+        if(time <= 0)
+        {
             secInterval.text = "GO!";
-
             StartCoroutine(SetInactive(1f, secInterval.gameObject));
         }
     }
 
-    private IEnumerator SetInactive(float time, GameObject obj){
-
+    private IEnumerator SetInactive(float time, GameObject obj)
+    {
         yield return new WaitForSeconds(time);
 
         obj.SetActive(false);
     }
 
     // Funcion que muestra el +15 al lado del tiempo
-    public IEnumerator AddTime(){
-
+    public IEnumerator AddTime()
+    {
         timePlus.gameObject.SetActive(true);
 
         yield return new WaitForSeconds(1f);
@@ -101,21 +100,23 @@ public class UIManager : MonoBehaviourPun{
         StartCoroutine(SetInactive(0f, timePlus.gameObject));
     }
 
-    public void SetTimerInactive(){
-
+    public void SetTimerInactive()
+    {
         StartCoroutine(SetInactive(0f, timer.gameObject));
     }
 
-    public void ShowDraw(){
-
+    public void ShowDraw()
+    {
         isDraw.gameObject.SetActive(true);
     }
 
-    public void ShowPauseMenu(){
+    public void ShowPauseMenu()
+    {
         pauseMenu.SetActive(true);
     }
 
-    public void HidePauseMenu(){
+    public void HidePauseMenu()
+    {
         pauseMenu.SetActive(false);
     }
 }

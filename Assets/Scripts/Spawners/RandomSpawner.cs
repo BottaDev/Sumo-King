@@ -1,19 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
-public class RandomSpawner : MonoBehaviour{
-
+public class RandomSpawner : MonoBehaviourPun
+{
     public GameObject consumable;
     public float spawnRate;        // Cuanto menor el  valor, mayor la cantidad de consumibles
     public float boundaryX;        // Limite de arena de spawn en X
     public float boundaryZ;        // Limite de arena de spawn en Z
     public float dropHeight = 35;
 
-    [HideInInspector]
-    public bool matchIsOver = false;         // La ronda termino o no
-
-    bool spawnRateLimiter = false;
+    [HideInInspector] public bool matchIsOver = false;         // La ronda termino o no
+    
+    [SerializeField, HideInInspector] private bool spawnRateLimiter = false;
 
     private IEnumerator StartDelay(float timer)
     {
@@ -30,8 +30,7 @@ public class RandomSpawner : MonoBehaviour{
 
             Vector3 position = new Vector3(Random.Range(-boundaryX, boundaryX), dropHeight, Random.Range(-boundaryZ, boundaryZ));
             Quaternion rotation = new Quaternion(0, Random.Range(0f, 360f), 0, 0);
-
-            Instantiate(consumable, position, rotation);
+            PhotonNetwork.Instantiate("Prefabs/Props/" + consumable.name, position, rotation);
         } 
     } 
 

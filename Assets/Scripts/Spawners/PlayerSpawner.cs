@@ -53,10 +53,12 @@ public class PlayerSpawner : MonoBehaviourPun{
                         breaker = true;
 
                         PhotonNetwork.Instantiate("Prefabs/Players/" + playerPrefab[i].name, _spawns[random].transform.position, _spawns[random].transform.rotation);
+                        //Photon ownership transfer....
                     }
                 }
             }
         }
+        Debug.Log("Spawn players");
     }
 
     /*public void AddPlayer(int player)

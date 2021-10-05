@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour {
-
+public class GameManager : MonoBehaviourPun 
+{
     public static GameManager instance = null;
-    public static bool gameIsPaused = false;
+    //public static bool gameIsPaused = false;
 
     public float matchTime = 120;       // Tiempo de juego de la partida (segundos)
     [Range(min: 0, max: 10)]
@@ -15,112 +16,107 @@ public class GameManager : MonoBehaviour {
     public UIManager uiManager;
 
     public GameObject[] totalPlayers;
-    int deathCount = 0;                 // Cantidad de players que murieron
-    GameObject playerWinner = null;     // Player que gano
-    CameraFollow cam;
+    [SerializeField, HideInInspector]private int deathCount = 0;                 // Cantidad de players que murieron
+    [SerializeField, HideInInspector]private GameObject playerWinner = null;     // Player que gano
+    [SerializeField, HideInInspector]private CameraFollow cam;
 
-    bool isGameOver = false;
-    bool limiter = false;
+    [SerializeField, HideInInspector] private bool isGameOver = false;
+    [SerializeField, HideInInspector] private bool limiter = false;
 
-    void Awake() {
-
-        if (instance == null) {
+    private void Awake() 
+    {
+        if (instance == null) 
             instance = this;
-        } else if (instance != this) {
+        else if (instance != this)
             Destroy(gameObject);
-        }
     }
 
-    void Start() {
-
-        totalPlayers = GameObject.FindGameObjectsWithTag("Player");
-
+    private void Start() 
+    {
         cam = Camera.main.GetComponent<CameraFollow>();
-
+        
         ChangeSpeed(0f, 0f);
     }
-    void Update(){
-        
+
+    private void Update()
+    {
         if (!limiter)
             IntervalSecuence();
 
-        if (!isGameOver && limiter){
-
+        if (!isGameOver && limiter)
+        {
             MatchInProgress();
 
-            if(Input.GetKeyDown(KeyCode.Escape)){
-                
+            /*if(Input.GetKeyDown(KeyCode.Escape))
+            {
                 if(gameIsPaused){
                     ResumeGame();
                 }else{
                     PauseGame();
                 }
-            }
+            }*/
         }
     }
 
-    void MatchInProgress(){
+    private void MatchInProgress()
+    {
+        // Si devuelve true, la ronda continua
+        bool matchChecker = TimeIsRunning();
 
-        bool matchChecker = TimeIsRunning();      // Si devuelve true, la ronda continua
-
-        if (matchChecker){
-
+        if (matchChecker)
+        {
             if (matchTime >= 45 && matchTime <= 45.99f)
                 spawner.ChangeSpawnRate();
 
-            if (deathCount == totalPlayers.Length){
-
+            if (deathCount == totalPlayers.Length)
                 StartCoroutine(EndMatch(false));
-
-            } else if (deathCount == (totalPlayers.Length - 1)){
-
+            else if (deathCount == (totalPlayers.Length - 1))
                 StartCoroutine("PickWinnerByPush");
-            }
-
-        } else{
+        } 
+        else
+        {
             PickWinnerByTime();
         }
     }
 
-    void IntervalSecuence() {
-
+    private void IntervalSecuence() 
+    {
         secInterval -= Time.deltaTime;
 
-        if (secInterval < 0){
+        if (secInterval < 0)
             secInterval = 0;
-        }
 
-        if (secInterval <= 0) {
-
+        if (secInterval <= 0) 
+        {
             limiter = true;
-
             spawner.StartCoroutine("StartDelay", secInterval);
-
             ChangeSpeed(5f, 250f);
-        } else {
-
+        } 
+        else 
+        {
             uiManager.ChangeSecInterval((int) secInterval);
         }
     }
 
-    bool TimeIsRunning() {
-
+    private bool TimeIsRunning() 
+    {
         matchTime -= Time.deltaTime;
 
-        if (matchTime >= 0) {
-
+        if (matchTime >= 0) 
+        {
             uiManager.ChangeTimer(matchTime);
-
             return true;
-        } else {
-            return false;
         }
+        
+        return false;
     }
 
-    void ChangeSpeed(float speed, float turnSpeed) {
-
-        foreach (GameObject player in totalPlayers) {
-
+    private void ChangeSpeed(float speed, float turnSpeed) 
+    {
+        totalPlayers = GameObject.FindGameObjectsWithTag("Player");
+        
+        foreach (GameObject player in totalPlayers) 
+        {
             PlayerState state = player.GetComponent<PlayerState>();
 
             state.speed = speed;
@@ -128,105 +124,100 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    void PickWinnerByTime() {
-
+    private void PickWinnerByTime() 
+    {
         int maxCount = 0;
 
         bool isDraw = false;
 
         totalPlayers = GameObject.FindGameObjectsWithTag("Player");             // Se buscan de nuevo los players ya que sino el array podria tener nulls
 
-        foreach (GameObject player in  totalPlayers) {
-
+        foreach (GameObject player in  totalPlayers) 
+        {
             PlayerState state = player.GetComponent<PlayerState>();
 
-            if (state.consumablesCount > maxCount) {
-
+            if (state.consumablesCount > maxCount) 
+            {
                 isDraw = false;
-
                 maxCount = state.consumablesCount;
-
                 playerWinner = player;
 
-            } else if (state.consumablesCount == maxCount){
+            } 
+            else if (state.consumablesCount == maxCount)
+            {
                 isDraw = true;
             }
         }
 
-        if (!isDraw){
+        if (!isDraw)
+        {
             StartCoroutine(EndMatch(true));
-        } else {
-
+        } 
+        else 
+        {
             matchTime = 15;
 
             uiManager.StartCoroutine("AddTime");
         }
     }
 
-    IEnumerator PickWinnerByPush(){
-
+    private IEnumerator PickWinnerByPush()
+    {
         yield return new WaitForSeconds(2.5f);
 
-        for (int i = 0; i < totalPlayers.Length; i++){
-            
-            if (totalPlayers[i] != null){
-
+        for (int i = 0; i < totalPlayers.Length; i++)
+        {
+            if (totalPlayers[i] != null)
                 playerWinner = totalPlayers[i];
-            }
         }
         StartCoroutine(EndMatch(true));
     }
 
-    IEnumerator EndMatch(bool winner){
-
+    private IEnumerator EndMatch(bool winner)
+    {
         uiManager.ChangeTimer(0);
-
         isGameOver = true;
-
         spawner.EndMatch();
-
         uiManager.SetTimerInactive();
 
         MatchManager match = GameObject.Find("MatchManager").GetComponent<MatchManager>();
 
-        if (winner){
-
+        if (winner)
+        {
             cam.SelectTarget(playerWinner);
-
             yield return new WaitForSeconds(4f);
-
             match.AddPlayerWin(playerWinner);
 
-        } else{
+        } 
+        else
+        {
             uiManager.ShowDraw();
-
             yield return new WaitForSeconds(1.5f);
-
             match.RestartDrawMatch();
         }
     }
 
-    public void ResumeGame(){
+    /*public void ResumeGame(){
 
         uiManager.HidePauseMenu();
 
         Time.timeScale = 1;
 
         gameIsPaused = false;
-    }
+    }*/
 
-    void PauseGame(){
+    /*void PauseGame(){
 
         uiManager.ShowPauseMenu();
 
         Time.timeScale = 0;
 
         gameIsPaused = true;
-    }
+    }*/
 
     public void BackToMenu(){
 
-        ResumeGame();
+        //ResumeGame();
 
         SceneManager.LoadScene("Menu");
     }
