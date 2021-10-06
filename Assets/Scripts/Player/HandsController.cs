@@ -9,17 +9,10 @@ public class HandsController : MonoBehaviourPun
     public PlayerState state;
     public Animation anim;
 
-    private GameObject _bodyParty;
-    
     private void ApplyForceOnBody(GameObject body)
     {
-        if (!photonView.IsMine) 
-            return;
-
-        _bodyParty = body;
-        
-        Player player = body.GetComponentInParent<PhotonView>().Owner;
-        photonView.RPC("ApplyForceOnBodyRPC", player);
+        Rigidbody rb = body.gameObject.GetComponent<Rigidbody>();
+        rb.AddForce(transform.forward * state.pushForce, ForceMode.Impulse);
 
         state.ApplyDebuff();
         anim.Play();
@@ -27,34 +20,18 @@ public class HandsController : MonoBehaviourPun
 
     private void ApplyForceOnHands(GameObject hands)
     {
-        if (!photonView.IsMine) 
-            return;
-
-        _bodyParty = hands;
+        Rigidbody rb = hands.gameObject.GetComponentInParent<Rigidbody>();
+        rb.AddForce(transform.forward * (state.pushForce / 2), ForceMode.Impulse);
         
-        Player player = hands.GetComponentInParent<PhotonView>().Owner;
-        photonView.RPC("ApplyForceOnHandsRPC", player);
-
         state.ApplyDebuff();
         anim.Play();
     }
 
-    [PunRPC]
-    private void ApplyForceOnHandsRPC()
-    {
-        Rigidbody rb = _bodyParty.gameObject.GetComponentInParent<Rigidbody>();
-        rb.AddForce(transform.forward * (state.pushForce / 2), ForceMode.Impulse);
-    }
-    
-    [PunRPC]
-    private void ApplyForceOnBodyRPC()
-    {
-        Rigidbody rb = _bodyParty.gameObject.GetComponent<Rigidbody>();
-        rb.AddForce(transform.forward * state.pushForce, ForceMode.Impulse);
-    }
-    
     private void OnTriggerEnter(Collider col)
     {
+        if (!photonView.IsMine) 
+            return;
+        
         if (col.gameObject.CompareTag("Player"))
             ApplyForceOnBody(col.gameObject);
 
