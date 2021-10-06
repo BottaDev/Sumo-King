@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4062392961235448756
+--- !u!1 &4008786011039776354
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4062392961235448746}
-  - component: {fileID: 567072455906557132}
+  - component: {fileID: 4008786011039776355}
+  - component: {fileID: 4008786011039776356}
   m_Layer: 0
-  m_Name: MatchManager
+  m_Name: PlayerSpawner
   m_TagString: Untagged
-  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4062392961235448746
+--- !u!4 &4008786011039776355
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4062392961235448756}
+  m_GameObject: {fileID: 4008786011039776354}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -31,26 +31,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &567072455906557132
+--- !u!114 &4008786011039776356
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4062392961235448756}
+  m_GameObject: {fileID: 4008786011039776354}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9947ea4ffceaeb4f93cbcbcf569d295, type: 3}
+  m_Script: {fileID: 11500000, guid: 6a2e502b6ff41954380bdaeedf01b432, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerWins: 00000000000000000000000000000000
-  totalRounds: 1
-  playersActive: 00000000
-  isDrawPlayers: 00000000
-  playerWinner: 0
-  _playerWinnerRival: 0
-  _currentRound: 0
-  _mapName: 
-  _isDraw: 0
-  _sceneLimiter: 0
-  _pointLimiter: 0
+  playerPrefab:
+  - {fileID: 1049941339106880263, guid: 158e8132d646def499a6991b33e37687, type: 3}
+  - {fileID: 818542096909835537, guid: 471d6ff3547a0a64d98b30a553703410, type: 3}
+  - {fileID: 349064383230031418, guid: 81b13ed792802e7469fddceb574102a4, type: 3}
+  - {fileID: 2896874538974174619, guid: 863fb7062c29bb04f85a4f3fa5457c31, type: 3}
+  _spawns: []

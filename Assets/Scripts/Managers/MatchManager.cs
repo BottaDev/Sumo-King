@@ -6,16 +6,31 @@ using UnityEngine.SceneManagement;
 
 public class MatchManager : MonoBehaviourPun
 {
+    public static MatchManager instance;    
+    
     public int[] playerWins = {0,0,0,0};
     [Range(min: 1f, max: 100f)] public int totalRounds  = 1;
+    public bool[] playersActive = { false, false, false, false};
+    public bool[] isDrawPlayers = { false, false, false, false };
+    public bool isDraw;
+    
     [HideInInspector] public int playerWinner;
     
     [SerializeField, HideInInspector] private int _playerWinnerRival;
     [SerializeField, HideInInspector] private int _currentRound = 0;
     [SerializeField, HideInInspector] private string _mapName;
-    [SerializeField, HideInInspector] private bool _isDraw;
     [SerializeField, HideInInspector] private bool _sceneLimiter;
     [SerializeField, HideInInspector] private bool _pointLimiter;
+    
+    private void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else if (instance != this)
+            Destroy(gameObject);
+        
+        DontDestroyOnLoad(gameObject);
+    }
     
     private void LoadScene()
     {
@@ -33,8 +48,6 @@ public class MatchManager : MonoBehaviourPun
             _sceneLimiter = true;
 
             _currentRound += 1;
-
-            PlayerSpawner.instance.GetSpawns(_isDraw);
         } 
         else if (scene.name == "Menu")
         {
@@ -133,29 +146,53 @@ public class MatchManager : MonoBehaviourPun
             {
                 maxPoints = playerWins[i];
                 playerWinner = i;
-                PlayerSpawner.instance.DisableIsDrawPlayers();
+                DisableIsDrawPlayers();
 
-                _isDraw = false;
+                isDraw = false;
             } 
             else if (playerWins[i] == maxPoints)
             {
                 _playerWinnerRival = i;
-                PlayerSpawner.instance.isDrawPlayers[_playerWinnerRival] = true;
+                isDrawPlayers[_playerWinnerRival] = true;
 
-                _isDraw = true;
+                isDraw = true;
             }     
         }
 
-        if (_isDraw)
+        if (isDraw)
         {
             totalRounds += 1;
-            PlayerSpawner.instance.isDrawPlayers[playerWinner] = true;
+            isDrawPlayers[playerWinner] = true;
 
             SelectMap();
         }
         else 
         {
             SceneManager.LoadScene(0);
+        }
+    }
+    
+    public void DisableAllPlayers()
+    {
+        for (int i = 0; i < playersActive.Length; i++)
+        {
+            playersActive[i] = false;
+        }
+    }
+
+    public void DisableIsDrawPlayers()
+    {
+        for (int i = 0; i < isDrawPlayers.Length; i++)
+        {
+            isDrawPlayers[i] = false;
+        }
+    }
+
+    public void SetPlayerList()
+    {
+        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+        {
+            playersActive[i] = true;
         }
     }
 

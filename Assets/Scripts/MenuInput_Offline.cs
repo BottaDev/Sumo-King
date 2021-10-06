@@ -81,7 +81,7 @@ public class MenuInput_Offline : MonoBehaviour {
         SetObject(player3Model, false);
         SetObject(player4Model, false);
 
-        PlayerSpawner.instance.DisableAllPlayers();
+        MatchManager.instance.DisableAllPlayers();
     }
 
     void Start() {
@@ -158,8 +158,8 @@ public class MenuInput_Offline : MonoBehaviour {
             SetObject(playButton, true);
     }*/
 
-    void SetObject(GameObject obj, bool mode){
-
+    private void SetObject(GameObject obj, bool mode)
+    {
         obj.SetActive(mode);
     }
 }

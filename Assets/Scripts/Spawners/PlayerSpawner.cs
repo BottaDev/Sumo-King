@@ -1,19 +1,18 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Realtime;
 
 public class PlayerSpawner : MonoBehaviourPun{
 
     public static PlayerSpawner instance;
 
     public GameObject[] playerPrefab;
-    public bool[] playersActive = { false, false, false, false};
     
-    [HideInInspector] public bool[] isDrawPlayers = { false, false, false, false };
     [SerializeField, HideInInspector] private GameObject[] _spawns;
-    [SerializeField, HideInInspector] private bool[] _spawnUsed;
 
     private void Awake()
     {
@@ -21,72 +20,40 @@ public class PlayerSpawner : MonoBehaviourPun{
             instance = this;
         else if (instance != this)
             Destroy(gameObject);
-        
-        DontDestroyOnLoad(gameObject);
     }
 
-    public void GetSpawns(bool isDraw)
+    private void Start()
+    {
+        GetSpawns();
+    }
+
+    private void GetSpawns()
     {
         _spawns = GameObject.FindGameObjectsWithTag("Spawn Area");
 
-        _spawnUsed = new bool[] { false, false, false, false };
-
-        SpawnPlayers(!isDraw ? playersActive : isDrawPlayers);
+        SpawnPlayer();
     }
 
-    private void SpawnPlayers(bool[] array)
+    private void SpawnPlayer()
     {
-        for (int i = 0; i < array.Length; i++)
+        int playerIndex = 0;
+        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
         {
-            if (array[i])
+            if (Equals(PhotonNetwork.PlayerList[i], PhotonNetwork.LocalPlayer))
             {
-                bool breaker = false;
-
-                while (!breaker)
-                {
-                    int random = Random.Range(0, 4);
-
-                    if (!_spawnUsed[random])
-                    {
-                        _spawnUsed[random] = true;
-
-                        breaker = true;
-
-                        PhotonNetwork.Instantiate("Prefabs/Players/" + playerPrefab[i].name, _spawns[random].transform.position, _spawns[random].transform.rotation);
-                        //Photon ownership transfer....
-                    }
-                }
+                playerIndex = i;   
+                break;
             }
         }
-        Debug.Log("Spawn players");
+
+        if (MatchManager.instance.isDraw && !MatchManager.instance.isDrawPlayers[playerIndex])
+            return;
+
+        PhotonNetwork.Instantiate("Prefabs/Players/" + playerPrefab[playerIndex].name, _spawns[playerIndex].transform.position, _spawns[playerIndex].transform.rotation);
     }
 
     /*public void AddPlayer(int player)
     {
         playersActive[player - 1] = true;
     }*/
-
-    public void DisableAllPlayers()
-    {
-        for (int i = 0; i < playersActive.Length; i++)
-        {
-            playersActive[i] = false;
-        }
-    }
-
-    public void DisableIsDrawPlayers()
-    {
-        for (int i = 0; i < isDrawPlayers.Length; i++)
-        {
-            isDrawPlayers[i] = false;
-        }
-    }
-
-    public void SetPlayerList()
-    {
-        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
-        {
-            playersActive[i] = true;
-        }
-    }
 }
